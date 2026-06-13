@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phương án sắp xếp khu phố – Phường Thủ Dầu Một</title>
+  <style>
+    :root {
+      --red:     #1746a0;
+      --red-dk:  #0f3480;
+      --gold:    #D4AC0D;
+      --bg:      #F5F7FB;
+      --surface: #FFFFFF;
+      --border:  #D0D8E8;
+      --text:    #1A1A1A;
+      --muted:   #5A6478;
+      --tag:     #EEF3FB;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--red);
+      color: #fff;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('banner-bg.png');
+      background-size: cover;
+      background-position: center top;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 24px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+    .header-emblem {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    }
+    .header-emblem img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .header-text {}
+    .header-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.88;
+      margin-bottom: 5px;
+    }
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .header-bar {
+      background: var(--red-dk);
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
+      padding: 8px 24px;
+      letter-spacing: 0.04em;
+      position: relative;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+    }
+
+    /* ── STATS BAR ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--red);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--red);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .section-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--red);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .section-head h2 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .section-head p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    /* ── SEARCH BOX ── */
+    .search-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .search-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    #searchInput {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      font-size: 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+      transition: border-color .18s;
+    }
+    #searchInput:focus { border-color: var(--red); background: #fff; }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    /* autocomplete */
+    #autocomplete {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: #fff;
+      border: 1.5px solid var(--red);
+      border-radius: 6px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.10);
+      z-index: 100;
+      max-height: 240px;
+      overflow-y: auto;
+      display: none;
+    }
+    .ac-item {
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ac-item:last-child { border-bottom: none; }
+    .ac-item:hover, .ac-item.active { background: #EEF3FB; }
+    .ac-kp-badge {
+      display: inline-block;
+      font-size: 10px;
+      background: #EEF3FB;
+      border: 1px solid #A8C0E8;
+      color: #1746a0;
+      border-radius: 4px;
+      padding: 1px 6px;
+      flex-shrink: 0;
+    }
+
+    /* result */
+    #result { display: none; }
+    .result-title {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .result-title span { color: var(--red); font-weight: 700; }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .r-cell {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 14px;
+    }
+    .r-cell.highlight {
+      background: #EEF3FB;
+      border-color: #A8C0E8;
+    }
+    .r-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+    .r-value { font-size: 16px; font-weight: 700; }
+    .r-value.big { font-size: 20px; color: var(--red); }
+
+    .merge-tag {
+      background: #EEF3FB;
+      border: 1px solid #A8C0E8;
+      color: #0f3480;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .hq-tag {
+      background: #EAF4FB;
+      border: 1px solid #AED6F1;
+      color: #1A5276;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* no result */
+    .no-result {
+      text-align: center;
+      padding: 32px 0;
+      color: var(--muted);
+      font-size: 14px;
+      display: none;
+    }
+
+    /* ── TABLE ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .table-card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .table-card-head h3 { font-size: 14px; font-weight: 700; }
+    #filterInput {
+      padding: 7px 12px;
+      font-size: 13px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      outline: none;
+      background: var(--bg);
+      width: 200px;
+    }
+    #filterInput:focus { border-color: var(--red); background: #fff; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: var(--red); color: #fff; }
+    thead th {
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #F0F5FC; }
+    tbody td { padding: 9px 12px; vertical-align: top; }
+    .merged-cell { color: var(--muted); font-style: italic; font-size: 12px; }
+    .badge-new {
+      display: inline-block;
+      background: #EEF3FB;
+      color: var(--red);
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 1px 6px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── NOTE ── */
+    .note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      border-left: 3px solid #1746a0;
+      padding-left: 12px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0 24px 40px;
+    }
+    footer strong { color: var(--red); }
+
+    /* ── ACCORDION TABLE ── */
+    .accordion-toggle {
+      width: 100%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      transition: background .15s, border-color .15s;
+      margin-bottom: 0;
+    }
+    .accordion-toggle:hover { background: #EEF3FB; border-color: var(--red); }
+    .accordion-toggle.open { border-color: var(--red); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    .accordion-arrow { font-size: 12px; transition: transform .25s; }
+    .accordion-toggle.open .accordion-arrow { transform: rotate(180deg); }
+    .accordion-body {
+      display: none;
+      border: 1.5px solid var(--red);
+      border-top: none;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .accordion-body.open { display: block; }
+
+    .accordion-body .table-card {
+      border: none;
+      border-radius: 0;
+    }
+
+    .map-wrap {
+      width: 100%;
+      height: 260px;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .info-card-head {
+      background: var(--red);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .info-card-body {
+      padding: 16px;
+    }
+    .info-card-body p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .info-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--red);
+      color: #fff;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .info-btn:hover { background: var(--red-dk); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stats .stat-card:last-child { grid-column: span 2; }
+      .result-grid { grid-template-columns: 1fr; }
+      #filterInput { width: 100%; }
+      .table-card-head { flex-direction: column; align-items: flex-start; }
+      .header-title { font-size: 16px; }
+      .info-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-bg"></div>
+  <div class="header-inner">
+    <div class="header-emblem">
+      <img src="logo.png" alt="Logo Phường Thủ Dầu Một" />
+    </div>
+    <div class="header-text">
+      <div class="header-label">UBND Phường Thủ Dầu Một · TP. Hồ Chí Minh</div>
+      <div class="header-title">Phương án sắp xếp khu phố<br>trên địa bàn phường Thủ Dầu Một</div>
+    </div>
+  </div>
+  <div class="header-bar">Tài liệu lấy ý kiến Nhân dân · UBND Phường Thủ Dầu Một, Thành phố Hồ Chí Minh</div>
+</header>
+
+<main>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-number">40</div>
+      <div class="stat-label">Khu phố<br>hiện tại</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">26</div>
+      <div class="stat-label">Khu phố<br>sau sắp xếp</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">34.832</div>
+      <div class="stat-label">Hộ thực tế<br>cư trú</div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-card">
+    <div class="section-head">
+      <div class="section-icon">🔎</div>
+      <div>
+        <h2>Tra cứu khu phố của bạn</h2>
+        <p>Nhập tên khu phố hiện tại để xem khu phố mới sau sắp xếp</p>
+      </div>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">🏘️</span>
+      <input type="text" id="searchInput" placeholder="Ví dụ: Chánh Lộc 1, Phú Cường 3..." autocomplete="off" />
+      <div id="autocomplete"></div>
+    </div>
+
+    <div id="result">
+      <div class="result-title">Kết quả tra cứu cho: <span id="resultFor"></span></div>
+
+      <div id="mergeTag" class="merge-tag" style="display:none">
+        <span>🔀</span>
+        <span id="mergeText"></span>
+      </div>
+
+      <div class="result-grid">
+        <div class="r-cell">
+          <div class="r-label">Khu phố hiện tại</div>
+          <div class="r-value" id="rOld"></div>
+        </div>
+        <div class="r-cell highlight">
+          <div class="r-label">Khu phố mới sau sắp xếp</div>
+          <div class="r-value big" id="rNew"></div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Số hộ khu phố mới</div>
+          <div class="r-value" id="rHo"></div>
+        </div>
+        <div class="r-cell">
+          <div class="r-label">Nhân khẩu khu phố mới</div>
+          <div class="r-value" id="rNK"></div>
+        </div>
+      </div>
+
+      <div id="hqTag" class="hq-tag" style="display:none">
+        <span>🏛️</span>
+        <span id="hqText"></span>
+      </div>
+    </div>
+
+    <div class="no-result" id="noResult">
+      Không tìm thấy khu phố <strong id="noResultFor"></strong>. Vui lòng kiểm tra lại tên khu phố.
+    </div>
+  </div>
+
+  <!-- BẢN ĐỒ & TÀI LIỆU -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-card-head">
+        <span>🗺️</span> Bản đồ khu phố mới
+      </div>
+      <div class="info-card-body">
+        <div class="map-wrap">
+          <iframe
+            src="https://www.google.com/maps/d/u/0/embed?mid=1zW5_wf0j70VvIfhXkHx__8GC1klLOfE"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+        <a class="info-btn" href="https://www.google.com/maps/d/u/0/edit?mid=1zW5_wf0j70VvIfhXkHx__8GC1klLOfE&usp=sharing" target="_blank">
+          🔗 Mở bản đồ lớn
+        </a>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-head">
+        <span>📂</span> Tài liệu pháp lý
+      </div>
+      <div class="info-card-body">
+        <p>Văn bản, nghị quyết, đề án liên quan đến phương án sắp xếp khu phố.</p>
+        <a class="info-btn" href="https://drive.google.com/drive/folders/1UbpfM5BGM-YyuGNt2nmCzsinTAA08Ldv?usp=drive_link" target="_blank">
+          🔗 Mở thư mục
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL TABLE (accordion) -->
+  <div class="section-head">
+    <div class="section-icon">📋</div>
+    <div>
+      <h2>Toàn bộ phương án sắp xếp</h2>
+      <p>40 khu phố hiện tại → 26 khu phố sau sắp xếp</p>
+    </div>
+  </div>
+
+  <button class="accordion-toggle" id="tableToggle" onclick="toggleTable()">
+    <span>Xem toàn bộ bảng phương án chi tiết</span>
+    <span class="accordion-arrow">▼</span>
+  </button>
+  <div class="accordion-body" id="tableBody-wrap">
+    <div class="table-card">
+      <div class="table-card-head">
+        <h3>Bảng phương án chi tiết</h3>
+        <input type="text" id="filterInput" placeholder="Lọc theo tên khu phố..." />
+      </div>
+      <div class="table-wrap">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Khu phố hiện tại</th>
+              <th>Hộ (cũ)</th>
+              <th>Nhân khẩu (cũ)</th>
+              <th>Khu phố mới</th>
+              <th>Hộ (mới)</th>
+              <th>Nhân khẩu (mới)</th>
+              <th>Trụ sở BĐH dự kiến</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Ghi chú:</strong> Số liệu hộ và nhân khẩu thực tế cư trú tính đến ngày 26/5/2026, do Công an phường Thủ Dầu Một thống kê.<br>
+    Phương án sắp xếp mang tính dự kiến, sẽ được chính thức hóa sau khi hoàn tất quy trình lấy ý kiến Nhân dân theo quy định.
+  </div>
+
+</main>
+
+<footer>
+  © <strong>UBND Phường Thủ Dầu Một</strong> · Thành phố Hồ Chí Minh
+</footer>
+
+<script>
+// ── ACCORDION ──
+function toggleTable() {
+  const btn = document.getElementById('tableToggle');
+  const body = document.getElementById('tableBody-wrap');
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+
+const DATA = [
+  // [kpCu, hoCu, nkCu, kpMoi, hoMoi, nkMoi, sttMoi, phuongAn, truSo]
+  ["Chánh Lộc 1",    486,  1416, "Chánh Lộc 1",   1245, 3582, 1, "Chánh Lộc 1, 2, 7",       "BĐH KP Chánh Lộc 1"],
+  ["Chánh Lộc 2",    377,  1118, "Chánh Lộc 1",   1245, 3582, 1, "Chánh Lộc 1, 2, 7",       "BĐH KP Chánh Lộc 1"],
+  ["Chánh Lộc 7",    382,  1048, "Chánh Lộc 1",   1245, 3582, 1, "Chánh Lộc 1, 2, 7",       "BĐH KP Chánh Lộc 1"],
+  ["Hiệp Thành 1",  1262,  3157, "Hiệp Thành 1",  1262, 3157, 2, "",                         ""],
+  ["Hiệp Thành 2",  1373,  3705, "Hiệp Thành 2",  1373, 3705, 3, "",                         ""],
+  ["Hiệp Thành 3",   916,  3080, "Hiệp Thành 3",   916, 3080, 4, "",                         ""],
+  ["Hiệp Thành 4",   981,  3130, "Hiệp Thành 4",   981, 3130, 5, "",                         ""],
+  ["Chánh Nghĩa 1",  405,  1190, "Chánh Nghĩa 1", 1135, 3729, 6, "Chánh Nghĩa 1, 7",        "BĐH KP Chánh Nghĩa 1"],
+  ["Chánh Nghĩa 7",  730,  2539, "Chánh Nghĩa 1", 1135, 3729, 6, "Chánh Nghĩa 1, 7",        "BĐH KP Chánh Nghĩa 1"],
+  ["Chánh Nghĩa 2",  866,  2352, "Chánh Nghĩa 2", 1336, 3942, 7, "Chánh Nghĩa 2, 4",        "BĐH KP Chánh Nghĩa 2"],
+  ["Chánh Nghĩa 4",  470,  1590, "Chánh Nghĩa 2", 1336, 3942, 7, "Chánh Nghĩa 2, 4",        "BĐH KP Chánh Nghĩa 2"],
+  ["Chánh Nghĩa 3", 1752,  4074, "Chánh Nghĩa 3", 1752, 4074, 8, "",                         ""],
+  ["Chánh Nghĩa 5", 1676,  4925, "Chánh Nghĩa 5", 1676, 4925, 9, "",                         ""],
+  ["Chánh Nghĩa 6",  923,  2863, "Chánh Nghĩa 6",  923, 2863,10, "",                         ""],
+  ["Chánh Nghĩa 8",  832,  2547, "Chánh Nghĩa 8",  832, 2547,11, "",                         ""],
+  ["Chánh Nghĩa 9", 1364,  4194, "Chánh Nghĩa 9", 1364, 4194,12, "",                         ""],
+  ["Chánh Nghĩa 10",1006,  3138, "Chánh Nghĩa 10",1338, 4244,13, "Chánh Nghĩa 10, 11",      "BĐH KP Chánh Nghĩa 11"],
+  ["Chánh Nghĩa 11", 332,  1106, "Chánh Nghĩa 10",1338, 4244,13, "Chánh Nghĩa 10, 11",      "BĐH KP Chánh Nghĩa 11"],
+  ["Chánh Nghĩa 12",1964,  4115, "Chánh Nghĩa 12",1964, 4115,14, "",                         ""],
+  ["Phú Cường 1",    752,  2300, "Phú Cường 1",   1752, 5117,15, "Phú Cường 1, 2",           "BĐH KP Phú Cường 1"],
+  ["Phú Cường 2",   1000,  2817, "Phú Cường 1",   1752, 5117,15, "Phú Cường 1, 2",           "BĐH KP Phú Cường 1"],
+  ["Phú Cường 3",    430,  1588, "Phú Cường 3",   1290, 5068,16, "Phú Cường 3, 4, 5",        "BĐH KP Phú Cường 5"],
+  ["Phú Cường 4",    411,  1528, "Phú Cường 3",   1290, 5068,16, "Phú Cường 3, 4, 5",        "BĐH KP Phú Cường 5"],
+  ["Phú Cường 5",    449,  1952, "Phú Cường 3",   1290, 5068,16, "Phú Cường 3, 4, 5",        "BĐH KP Phú Cường 5"],
+  ["Phú Cường 6",    727,  2832, "Phú Cường 6",   1045, 4067,17, "Phú Cường 6, 7",           "BĐH KP Phú Cường 7"],
+  ["Phú Cường 7",    318,  1235, "Phú Cường 6",   1045, 4067,17, "Phú Cường 6, 7",           "BĐH KP Phú Cường 7"],
+  ["Phú Cường 8",    272,  1038, "Phú Cường 8",    880, 3510,18, "Phú Cường 8, 9, 10",       "BĐH KP Phú Cường 8"],
+  ["Phú Cường 9",    230,  1044, "Phú Cường 8",    880, 3510,18, "Phú Cường 8, 9, 10",       "BĐH KP Phú Cường 8"],
+  ["Phú Cường 10",   378,  1428, "Phú Cường 8",    880, 3510,18, "Phú Cường 8, 9, 10",       "BĐH KP Phú Cường 8"],
+  ["Phú Cường 11",   700,  2708, "Phú Cường 11",  1732, 6881,19, "Phú Cường 11, 12, 13, 14", "BĐH KP Phú Cường 14"],
+  ["Phú Cường 12",   422,  1722, "Phú Cường 11",  1732, 6881,19, "Phú Cường 11, 12, 13, 14", "BĐH KP Phú Cường 14"],
+  ["Phú Cường 13",   338,  1195, "Phú Cường 11",  1732, 6881,19, "Phú Cường 11, 12, 13, 14", "BĐH KP Phú Cường 14"],
+  ["Phú Cường 14",   272,  1256, "Phú Cường 11",  1732, 6881,19, "Phú Cường 11, 12, 13, 14", "BĐH KP Phú Cường 14"],
+  ["Phú Thọ 2",     1731,  4298, "Phú Thọ 2",     1731, 4298,20, "",                         ""],
+  ["Phú Thọ 3",     1736,  4443, "Phú Thọ 3",     1736, 4443,21, "",                         ""],
+  ["Phú Thọ 4",     1770,  4304, "Phú Thọ 4",     1770, 4304,22, "",                         ""],
+  ["Phú Thọ 5",      924,  2896, "Phú Thọ 5",      924, 2896,23, "",                         ""],
+  ["Phú Thọ 6",     1162,  3203, "Phú Thọ 6",     1162, 3203,24, "",                         ""],
+  ["Phú Thọ 7",     1223,  3243, "Phú Thọ 7",     1223, 3243,25, "",                         ""],
+  ["Phú Thọ 8",     1490,  4011, "Phú Thọ 8",     1490, 4011,26, "",                         ""],
+];
+
+function fmt(n) { return n.toLocaleString('vi-VN'); }
+function normalize(s) {
+  return s.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/đ/g,"d");
+}
+
+// ── BUILD TABLE ──
+function buildTable(filter) {
+  const tbody = document.getElementById('tableBody');
+  const kw = normalize(filter || '');
+  tbody.innerHTML = '';
+
+  // group by kpMoi to handle rowspan display
+  let sttCu = 0;
+  DATA.forEach(row => {
+    const [kpCu, hoCu, nkCu, kpMoi, hoMoi, nkMoi, sttMoi, phuongAn, truSo] = row;
+    if (kw && !normalize(kpCu).includes(kw) && !normalize(kpMoi).includes(kw)) return;
+    sttCu++;
+    const tr = document.createElement('tr');
+    const isMerged = phuongAn !== '';
+    tr.innerHTML = `
+      <td>${sttCu}</td>
+      <td>${kpCu}</td>
+      <td>${fmt(hoCu)}</td>
+      <td>${fmt(nkCu)}</td>
+      <td><span class="badge-new">${kpMoi}</span>${isMerged ? `<br><span class="merged-cell">Ghép: ${phuongAn}</span>` : ''}</td>
+      <td>${fmt(hoMoi)}</td>
+      <td>${fmt(nkMoi)}</td>
+      <td>${truSo || '<span class="merged-cell">—</span>'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+buildTable('');
+
+document.getElementById('filterInput').addEventListener('input', function() {
+  buildTable(this.value);
+});
+
+// ── AUTOCOMPLETE & SEARCH ──
+const searchInput = document.getElementById('searchInput');
+const acBox = document.getElementById('autocomplete');
+let acIndex = -1;
+
+function getMatches(val) {
+  const kw = normalize(val);
+  if (!kw) return [];
+  return DATA.filter(r => normalize(r[0]).includes(kw))
+             .map(r => r[0])
+             .filter((v,i,a) => a.indexOf(v) === i)
+             .slice(0, 8);
+}
+
+function renderAC(items) {
+  if (!items.length) { acBox.style.display = 'none'; return; }
+  acBox.innerHTML = items.map((item, i) =>
+    `<div class="ac-item" data-val="${item}"><span class="ac-kp-badge">KP</span>${item}</div>`
+  ).join('');
+  acBox.style.display = 'block';
+  acIndex = -1;
+}
+
+searchInput.addEventListener('input', function() {
+  renderAC(getMatches(this.value));
+  if (!this.value.trim()) { hideResult(); }
+});
+
+searchInput.addEventListener('keydown', function(e) {
+  const items = acBox.querySelectorAll('.ac-item');
+  if (e.key === 'ArrowDown') {
+    acIndex = Math.min(acIndex + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+    e.preventDefault();
+  } else if (e.key === 'ArrowUp') {
+    acIndex = Math.max(acIndex - 1, -1);
+    items.forEach((el, i) => el.classList.toggle('active', i === acIndex));
+    e.preventDefault();
+  } else if (e.key === 'Enter') {
+    if (acIndex >= 0 && items[acIndex]) {
+      selectKP(items[acIndex].dataset.val);
+    } else {
+      doSearch(this.value);
+    }
+  } else if (e.key === 'Escape') {
+    acBox.style.display = 'none';
+  }
+});
+
+acBox.addEventListener('mousedown', function(e) {
+  const item = e.target.closest('.ac-item');
+  if (item) selectKP(item.dataset.val);
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-wrap')) acBox.style.display = 'none';
+});
+
+function selectKP(val) {
+  searchInput.value = val;
+  acBox.style.display = 'none';
+  doSearch(val);
+}
+
+function hideResult() {
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('noResult').style.display = 'none';
+}
+
+function doSearch(val) {
+  const kw = normalize(val.trim());
+  if (!kw) { hideResult(); return; }
+  const found = DATA.find(r => normalize(r[0]) === kw);
+  if (!found) {
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('noResult').style.display = 'block';
+    document.getElementById('noResultFor').textContent = val;
+    return;
+  }
+  const [kpCu, hoCu, nkCu, kpMoi, hoMoi, nkMoi, sttMoi, phuongAn, truSo] = found;
+  document.getElementById('resultFor').textContent = kpCu;
+  document.getElementById('rOld').textContent = kpCu;
+  document.getElementById('rNew').textContent = kpMoi;
+  document.getElementById('rHo').textContent = fmt(hoMoi) + ' hộ';
+  document.getElementById('rNK').textContent = fmt(nkMoi) + ' người';
+
+  const mergeTag = document.getElementById('mergeTag');
+  if (phuongAn) {
+    mergeTag.style.display = 'flex';
+    document.getElementById('mergeText').textContent =
+      `Khu phố ${kpMoi} được hợp nhất từ các khu phố: ${phuongAn}.`;
+  } else {
+    mergeTag.style.display = 'none';
+  }
+
+  const hqTag = document.getElementById('hqTag');
+  if (truSo) {
+    hqTag.style.display = 'flex';
+    document.getElementById('hqText').textContent =
+      `Dự kiến đặt trụ sở Ban điều hành: ${truSo}.`;
+  } else {
+    hqTag.style.display = 'none';
+  }
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('noResult').style.display = 'none';
+}
+</script>
+</body>
+</html>
